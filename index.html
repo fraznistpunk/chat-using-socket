@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+   <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+      <title>Welcome to chat</title>
+      <style>
+        * {
+            font-family: 'monospace';
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        #welcome-container {
+            padding: 25px;
+            border: 1px solid #ccc;
+            max-width: 800px;
+            border-radius: 7px;
+            margin: 100px auto;
+            box-shadow: 1px 1px 20px 0px #00000030;
+        }
+        .chatBtn, input {
+            padding: 5px 12px;
+        }
+        input, input.form-control {
+            border: 0px;
+            border-bottom: 1px solid #ccc;
+            border-radius: 0px;
+        }
+        input:focus, input.form-control:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        .chatBtn {
+            background: #2e2e2e;
+            color: #00ff00;
+            border: 1px;
+            border-radius: 2px;
+        }
+        #message-container {
+            /*border: solid 1px #EEE;*/
+            max-width: 800px;
+            margin: 0px auto;
+        }
+        .messages {
+          margin-top: 30px;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .message {
+          border-radius: 20px;
+          padding: 8px 15px;
+          margin-top: 5px;
+          margin-bottom: 5px;
+          display: inline-block;
+        }
+
+        .yours {
+          align-items: flex-start;
+        }
+
+        .yours .message {
+            margin-right: 25%;
+            color: white;
+            background: linear-gradient(to bottom, #00D0EA 0%, #0085D1 100%);
+            background-attachment: fixed;
+            position: relative;
+            left : 10px;
+        }
+        .yours .message.last:before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          bottom: 0;
+          left: -7px;
+          height: 20px;
+          width: 20px;
+          background: linear-gradient(to bottom, #00D0EA 0%, #0085D1 100%);;
+          border-bottom-right-radius: 15px;
+        }
+        .yours .message.last:after {
+          content: "";
+          position: absolute;
+          z-index: 1;
+          bottom: 0;
+          left: -10px;
+          width: 10px;
+          height: 20px;
+          background: white;
+          border-bottom-right-radius: 10px;
+        }
+      </style>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   </head>
+   
+   <script src = "/socket.io/socket.io.js"></script>
+   <script>
+      var socket = io();
+      function setUsername() {
+         socket.emit('setUsername', document.getElementById('name').value);
+      };
+      var user;
+      socket.on('userExists', function(data) {
+         document.getElementById('error-container').innerHTML = data;
+      });
+      socket.on('userSet', function(data) {
+         user = data.username;
+         document.body.innerHTML = '<h4 style="text-align:center"><strong><u>Send Message</u></strong></h4><div class="row mt-2" style="justify-content:center;display:flex"><div class="col-sm-6"><input class="form-control" type = "text" placeholder="Type message. . ." id = "message"></div>\
+         <div class="col-sm-1"><button style="background: transparent;border: none" type = "button" id= "sender" name = "button" onclick = "sendMessage(); "><span class="material-icons">send</span></button></div></div>\
+         <br/><div id = "message-container" class="senderMSG"></div>';
+      });
+
+      function sendMessage() {
+         var msg = document.getElementById('message').value;
+         if(msg) {
+            socket.emit('msg', {message: msg, user: user});
+         }
+      }
+
+      socket.on('newmsg', function(data) {
+         if(user) {
+            document.getElementById('message-container').innerHTML += 
+            '<div class="yours messages"><div class="message last"> ' + data.message + ' </div><small class="chat-user"><strong style="position: relative;left: 20px;top: -5px;">'+ data.user +'</strong></small> </div>'
+         }
+      })
+   </script>
+   
+   <body>
+    <div class="container mt-3">
+        <div class="row" style="justify-content: center;">
+            <div id = "error-container"></div>
+        </div>
+    </div>
+    <div id="welcome-container">
+        <h4 class="mb-4" style="text-align: center;font-weight: 600;">Enter your name to Chat</h4><hr/>
+            <div class="row">
+                <div class="col-sm-9">
+                    <input id = "name" type = "text" name = "name" class="form-control" placeholder = "Enter your name!">
+                </div>
+                <div class="col-sm-3">
+                    <button type = "button" class="chatBtn" name = "button" onclick = "setUsername()">
+                    Let me chat!
+                    </button>
+                </div>
+            </div>
+    </div>
+   </body>
+</html>
