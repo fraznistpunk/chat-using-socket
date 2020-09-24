@@ -6,6 +6,10 @@ app.get('/', function(req, res) {
    res.sendfile('index.html');
 });
 
+app.get('/main', function(req, res) {
+   res.sendfile('main.js');
+});
+
 users = [];
 io.on('connection', function(socket) {
    console.log('A user connected');
