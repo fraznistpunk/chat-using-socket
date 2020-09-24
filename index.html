@@ -11,21 +11,28 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            color: #2e2e2e !important;
+            background-color: #eee !important;
         }
+        small {
+            font-size: 70%;
+        }
+
         #welcome-container {
             padding: 25px;
             border: 1px solid #ccc;
             max-width: 800px;
             border-radius: 7px;
             margin: 100px auto;
-            box-shadow: 1px 1px 20px 0px #00000030;
+            box-shadow: 1px 1px 10px 0px #00000030;
+            background: #eee;
         }
         .chatBtn, input {
             padding: 5px 12px;
         }
         input, input.form-control {
             border: 0px;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 2px solid #ccc;
             border-radius: 0px;
         }
         input:focus, input.form-control:focus {
@@ -88,7 +95,7 @@
           left: -10px;
           width: 10px;
           height: 20px;
-          background: white;
+          background: #eee;
           border-bottom-right-radius: 10px;
         }
       </style>
@@ -109,7 +116,7 @@
       socket.on('userSet', function(data) {
          user = data.username;
          document.body.innerHTML = '<h4 style="text-align:center"><strong><u>Send Message</u></strong></h4><div class="row mt-2" style="justify-content:center;display:flex"><div class="col-sm-6"><input class="form-control" type = "text" placeholder="Type message. . ." id = "message"></div>\
-         <div class="col-sm-1"><button style="background: transparent;border: none" type = "button" id= "sender" name = "button" onclick = "sendMessage(); "><span class="material-icons">send</span></button></div></div>\
+         <div class="col-sm-1"><button style="background: transparent;border: none" type = "button" id= "sender" name = "button" onclick = "sendMessage(); "><span style="padding:5px;" class="material-icons">send</span></button></div></div>\
          <br/><div id = "message-container" class="senderMSG"></div>';
       });
 
